@@ -125,7 +125,7 @@ class InferGoogleVisionOcrFactory(dataprocess.CTaskFactory):
         dataprocess.CTaskFactory.__init__(self)
         # Set algorithm information/metadata here
         self.info.name = "infer_google_vision_ocr"
-        self.info.short_description = "Image Properties feature detects general attributes of the image, such as dominant color."
+        self.info.short_description = "Detects and extracts text from any image. ."
         # relative path -> as displayed in Ikomia Studio algorithm tree
         self.info.icon_path = "images/cloud.png"
         self.info.path = "Plugins/Python/Other"
@@ -140,7 +140,7 @@ class InferGoogleVisionOcrFactory(dataprocess.CTaskFactory):
         # Code source repository
         self.info.repository = "https://github.com/googleapis/python-vision"
         # Keywords used for search
-        self.info.keywords = "Text detection,Text recognition,OCR"
+        self.info.keywords = "Text detection,Text recognition,OCR,Cloud,Vision AI"
         self.info.algo_type = core.AlgoType.INFER
         self.info.algo_tasks = "OCR"
 
