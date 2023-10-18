@@ -4,8 +4,6 @@ from google.cloud import vision
 import os
 import io
 import cv2
-from PIL import Image, ImageDraw
-import numpy as np
 
 
 # --------------------
