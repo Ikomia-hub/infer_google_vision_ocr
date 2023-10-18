@@ -1,5 +1,6 @@
+
 <div align="center">
-  <img src="images/icon.png" alt="Algorithm icon">
+  <img src="images/cloud.png" alt="Algorithm icon">
   <h1 align="center">infer_google_vision_ocr</h1>
 </div>
 <br />
@@ -19,10 +20,18 @@
     </a> 
 </p>
 
-[Put algorithm description here]
 
-[Insert illustrative image here. Image must be accessible publicly, in algorithm Github repository for example.
-<img src="images/illustration.png"  alt="Illustrative image" width="30%" height="30%">]
+The Vision API can detect and extract text from images.
+
+**Running this algorithm requires**: 
+- **a Google Cloud Vision API Key**
+- **a Google Cloud account with Cloud Vision API enable**
+
+**Pease refer to the 'Advanced Usage' section for guidance on how to set these up.**
+
+
+![ocr illustration](https://raw.githubusercontent.com/Ikomia-hub/infer_google_vision_ocr/main/images/output.png)
+
 
 ## :rocket: Use with Ikomia API
 
@@ -36,11 +45,10 @@ pip install ikomia
 
 #### 2. Create your workflow
 
-[Change the sample image URL to fit algorithm purpose]
 
 ```python
-import ikomia
 from ikomia.dataprocess.workflow import Workflow
+from ikomia.utils.displayIO import display
 
 # Init your workflow
 wf = Workflow()
@@ -48,8 +56,18 @@ wf = Workflow()
 # Add algorithm
 algo = wf.add_task(name="infer_google_vision_ocr", auto_connect=True)
 
-# Run on your image  
-wf.run_on(url="example_image.png")
+# Set parameters
+algo.set_parameters({
+    'google_application_credentials':'PATH/TO/YOUR/GOOGLE/CLOUD/VISION/API/KEY.json'
+})
+
+# Run on your image
+wf.run_on(url='https://cloud.google.com/static/vision/docs/images/sign_small.jpg')
+
+# Display results
+img_output = algo.get_output(0)
+recognition_output = algo.get_output(1)
+display(img_output.get_image_with_mask_and_graphics(recognition_output), title="Google Vision OCR")
 ```
 
 ## :sunny: Use with Ikomia Studio
@@ -60,39 +78,12 @@ Ikomia Studio offers a friendly UI with the same features as the API.
 
 - For additional guidance on getting started with Ikomia Studio, check out [this blog post](https://www.ikomia.ai/blog/how-to-get-started-with-ikomia-studio).
 
-## :pencil: Set algorithm parameters
-
-[Explain each algorithm parameters]
-
-[Change the sample image URL to fit algorithm purpose]
-
-```python
-import ikomia
-from ikomia.dataprocess.workflow import Workflow
-
-# Init your workflow
-wf = Workflow()
-
-# Add algorithm
-algo = wf.add_task(name="infer_google_vision_ocr", auto_connect=True)
-
-algo.set_parameters({
-    "param1": "value1",
-    "param2": "value2",
-    ...
-})
-
-# Run on your image  
-wf.run_on(url="example_image.png")
-
-```
 
 ## :mag: Explore algorithm outputs
 
 Every algorithm produces specific outputs, yet they can be explored them the same way using the Ikomia API. For a more in-depth understanding of managing algorithm outputs, please refer to the [documentation](https://ikomia-dev.github.io/python-api-documentation/advanced_guide/IO_management.html).
 
 ```python
-import ikomia
 from ikomia.dataprocess.workflow import Workflow
 
 # Init your workflow
@@ -101,11 +92,16 @@ wf = Workflow()
 # Add algorithm
 algo = wf.add_task(name="infer_google_vision_ocr", auto_connect=True)
 
-# Run on your image  
-wf.run_on(url="example_image.png")
+# Set parameters
+algo.set_parameters({
+    'google_application_credentials':'PATH/TO/YOUR/GOOGLE/CLOUD/VISION/API/KEY.json'
+})
+
+# Run on your image
+wf.run_on(url='https://cloud.google.com/static/vision/docs/images/sign_small.jpg')
 
 # Iterate over outputs
-for output in algo.get_outputs()
+for output in algo.get_outputs():
     # Print information
     print(output)
     # Export it to JSON
@@ -114,4 +110,21 @@ for output in algo.get_outputs()
 
 ## :fast_forward: Advanced usage 
 
-[optional]
+ ### :bulb: How to generate a Google Cloud Vision API Key and enable Cloud Vision API?
+- [YT video tutorial](https://www.youtube.com/watch?v=kZ3OL3AN_IA&t=157s)
+- [Blog tutorial](https://daminion.net/docs/how-to-get-google-cloud-vision-api-key/)
+
+
+### :key: Set the Google Cloud Vision API Key in your environment variable. 
+[Permanently setting the API Key in your environment variable](https://medium.com/@kapilgorve/set-environment-variable-in-windows-and-wsl-linux-in-terminal-c5e11138e807) enables the use of this algorithm without having to define the 'google_application_credentials' parameter every time.
+
+
+*Note: the key will be require for deployments.*
+
+
+
+###  :red_circle: Deployment Limitations
+This algorithm necessitates authentication to Google Cloud services via API keys. Consequently, it will not operate offline (e.g., in AWS Lambda) or in environments without internet access to communicate with Google Cloud services.
+
+Ensure to manage API keys securely and avoid exposing them in public repositories or forums to prevent unauthorized usage. If the keys are compromised, be sure to revoke them immediately and generate new keys in the Google Cloud Console.
+
