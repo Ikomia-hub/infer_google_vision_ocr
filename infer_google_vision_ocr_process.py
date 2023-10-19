@@ -126,7 +126,7 @@ class InferGoogleVisionOcrFactory(dataprocess.CTaskFactory):
         self.info.short_description = "Detects and extracts text from any image. ."
         # relative path -> as displayed in Ikomia Studio algorithm tree
         self.info.icon_path = "images/cloud.png"
-        self.info.path = "Plugins/Python/Other"
+        self.info.path = "Plugins/Python/Text"
         self.info.version = "1.0.0"
         self.info.authors = "Google"
         self.info.article = ""
