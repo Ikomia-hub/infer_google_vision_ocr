@@ -43,8 +43,6 @@ class InferGoogleVisionOcr(dataprocess.C2dImageTask):
         self.add_output(dataprocess.CTextIO())
         self.add_output(dataprocess.DataDictIO())
 
-
-
         # Create parameters object
         if param is None:
             self.set_param_object(InferGoogleVisionOcrParam())
@@ -84,7 +82,14 @@ class InferGoogleVisionOcr(dataprocess.C2dImageTask):
         is_success, image_buffer = cv2.imencode(".jpg", src_image)
         byte_stream = io.BytesIO(image_buffer)
 
-        response = self.client.text_detection(image=byte_stream)
+        # Add confidence score's parameter
+        ocr_detection_params = vision.TextDetectionParams(
+                                        enable_text_detection_confidence_score=True
+        )
+        image_context = vision.ImageContext(text_detection_params=ocr_detection_params)
+
+        # Infer
+        response = self.client.text_detection(image=byte_stream, image_context=image_context)
 
         if response.error.message:
             raise Exception(
@@ -92,19 +97,42 @@ class InferGoogleVisionOcr(dataprocess.C2dImageTask):
                 "https://cloud.google.com/apis/design/errors".format(response.error.message)
         )
 
-        output_dict.data = ({'Detected text': f'{response.text_annotations[0].description}'})
+        # Set output dict
+        output_dict.data = {'Detected text': f'{response.text_annotations[0].description}'}
 
+        # Get confidence scores from response
+        scores = []
+        scores = [word.confidence
+                        for block in response.full_text_annotation.pages[0].blocks
+                        for paragraph in block.paragraphs
+                        for word in paragraph.words
+        ]
+
+        # Extract data and display output
         texts = response.text_annotations
         for i, text in enumerate(texts[1:]):
             word = f'{text.description}'
+            conf = scores[i]
 
+            # Get box coordinates
             vertices = [(vertex.x,vertex.y) for vertex in text.bounding_poly.vertices]
             x_box = vertices[0][0]
             y_box = vertices[0][1]
             w = vertices[1][0] - x_box
             h = vertices[2][1] - y_box
 
-            text_output.add_text_field(id=i, label="", text=word, confidence=float(1),box_x=x_box, box_y=y_box, box_width=w, box_height=h, color=self.color)
+            # Add text graphics object
+            text_output.add_text_field(
+                            id=i,
+                            label="",
+                            text=word,
+                            confidence=conf,
+                            box_x=x_box,
+                            box_y=y_box,
+                            box_width=w,
+                            box_height=h,
+                            color=self.color
+            )
 
         # Step progress bar (Ikomia Studio):
         self.emit_step_progress()
@@ -123,7 +151,7 @@ class InferGoogleVisionOcrFactory(dataprocess.CTaskFactory):
         dataprocess.CTaskFactory.__init__(self)
         # Set algorithm information/metadata here
         self.info.name = "infer_google_vision_ocr"
-        self.info.short_description = "Detects and extracts text from any image. ."
+        self.info.short_description = "Detects and extracts text from any image."
         # relative path -> as displayed in Ikomia Studio algorithm tree
         self.info.icon_path = "images/cloud.png"
         self.info.path = "Plugins/Python/Text"
@@ -134,7 +162,7 @@ class InferGoogleVisionOcrFactory(dataprocess.CTaskFactory):
         self.info.year = 2023
         self.info.license = "Apache License 2.0"
         # URL of documentation
-        self.info.documentation_link = "https://cloud.google.com/vision/docs/detecting-properties"
+        self.info.documentation_link = "https://cloud.google.com/vision/docs/ocr"
         # Code source repository
         self.info.repository = "https://github.com/googleapis/python-vision"
         # Keywords used for search
