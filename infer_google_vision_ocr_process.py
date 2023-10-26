@@ -116,10 +116,16 @@ class InferGoogleVisionOcr(dataprocess.C2dImageTask):
 
             # Get box coordinates
             vertices = [(vertex.x,vertex.y) for vertex in text.bounding_poly.vertices]
-            x_box = vertices[0][0]
-            y_box = vertices[0][1]
-            w = vertices[1][0] - x_box
-            h = vertices[2][1] - y_box
+
+            # Extract all the x-coordinates and y-coordinates
+            x_coords = [point[0] for point in vertices]
+            y_coords = [point[1] for point in vertices]
+
+            # Calculate x1, y1, w, and h
+            x_box = min(x_coords)
+            y_box = min(y_coords)
+            w = max(x_coords) - x_box
+            h = max(y_coords) - y_box
 
             # Add text graphics object
             text_output.add_text_field(
