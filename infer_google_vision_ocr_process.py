@@ -170,7 +170,8 @@ class InferGoogleVisionOcrFactory(dataprocess.CTaskFactory):
         # URL of documentation
         self.info.documentation_link = "https://cloud.google.com/vision/docs/ocr"
         # Code source repository
-        self.info.repository = "https://github.com/googleapis/python-vision"
+        self.info.repository = "https://github.com/Ikomia-hub/infer_google_vision_ocr"
+        self.info.original_repository = "https://github.com/googleapis/python-vision"
         # Keywords used for search
         self.info.keywords = "Text detection,Text recognition,OCR,Cloud,Vision AI"
         self.info.algo_type = core.AlgoType.INFER
