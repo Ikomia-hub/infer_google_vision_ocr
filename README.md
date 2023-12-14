@@ -11,7 +11,7 @@
     <a href="https://app.ikomia.ai/hub/">
         <img alt="Website" src="https://img.shields.io/website/http/app.ikomia.ai/en.svg?down_color=red&down_message=offline&up_message=online">
     </a>
-    <a href="https://github.com/Ikomia-hub/infer_google_vision_ocr/blob/main/LICENSE.md">
+    <a href="https://github.com/Ikomia-hub/infer_google_vision_ocr/blob/main/LICENSE">
         <img alt="GitHub" src="https://img.shields.io/github/license/Ikomia-hub/infer_google_vision_ocr.svg?color=blue">
     </a>    
     <br>
@@ -30,7 +30,7 @@ The Vision API can detect and extract text from images.
 **Pease refer to the 'Advanced Usage' section for guidance on how to set these up.**
 
 
-![ocr illustration](https://raw.githubusercontent.com/Ikomia-hub/infer_google_vision_ocr/main/images/output.png)
+![ocr illustration](https://raw.githubusercontent.com/Ikomia-hub/infer_google_vision_ocr/main/images/output.PNG)
 
 
 ## :rocket: Use with Ikomia API
